@@ -1,6 +1,6 @@
 import i18n from '../i18n'
 
-export default function(mind) {
+export default function (mind) {
   let locale = i18n[mind.locale] ? mind.locale : 'en'
   let createDiv = (id, name) => {
     let div = document.createElement('div')
@@ -36,22 +36,22 @@ export default function(mind) {
   styleDiv.innerHTML = `
       <div class="nm-fontsize-container">
         ${['15', '24', '32']
-          .map(size => {
-            return `<div class="size"  data-size="${size}">
+      .map(size => {
+        return `<div class="size"  data-size="${size}">
         <svg class="icon" style="width: ${size}px;height: ${size}px" aria-hidden="true">
           <use xlink:href="#icon-a"></use>
         </svg></div>`
-          })
-          .join('')}<div class="bold"><svg class="icon" aria-hidden="true">
+      })
+      .join('')}<div class="bold"><svg class="icon" aria-hidden="true">
   <use xlink:href="#icon-B"></use>
   </svg></div>
       </div>
       <div class="nm-fontcolor-container">
         ${colorList
-          .map(color => {
-            return `<div class="split6"><div class="palette" data-color="${color}" style="background-color: ${color};"></div></div>`
-          })
-          .join('')}
+      .map(color => {
+        return `<div class="split6"><div class="palette" data-color="${color}" style="background-color: ${color};"></div></div>`
+      })
+      .join('')}
       </div>
       <div class="bof">
       <span class="font">${i18n[locale].font}</span>
@@ -59,14 +59,12 @@ export default function(mind) {
       </div>
   `
   tagDiv.innerHTML = `
-      ${i18n[locale].tag}<input class="nm-tag" tabindex="-1" placeholder="${
-    i18n[locale].tagsSeparate
-  }" /><br>
+      ${i18n[locale].tag}<input class="nm-tag" tabindex="-1" placeholder="${i18n[locale].tagsSeparate
+    }" /><br>
   `
   iconDiv.innerHTML = `
-      ${i18n[locale].icon}<input class="nm-icon" tabindex="-1" placeholder="${
-    i18n[locale].iconsSeparate
-  }" /><br>
+      ${i18n[locale].icon}<input class="nm-icon" tabindex="-1" placeholder="${i18n[locale].iconsSeparate
+    }" /><br>
   `
 
   let menuContainer = document.createElement('nmenu')
@@ -82,9 +80,9 @@ export default function(mind) {
 
   function clearSelect(klass, remove) {
     var elems = document.querySelectorAll(klass)
-    ;[].forEach.call(elems, function(el) {
-      el.classList.remove(remove)
-    })
+      ;[].forEach.call(elems, function (el) {
+        el.classList.remove(remove)
+      })
   }
 
   mind.container.append(menuContainer)
@@ -129,14 +127,14 @@ export default function(mind) {
   }
   Array.from(sizeSelector).map(
     dom =>
-      (dom.onclick = e => {
-        if (!mind.currentNode.nodeObj.style) mind.currentNode.nodeObj.style = {}
-        clearSelect('.size', 'size-selected')
-        let size = e.currentTarget
-        mind.currentNode.nodeObj.style.fontSize = size.dataset.size
-        size.className = 'size size-selected'
-        mind.updateNodeStyle(mind.currentNode.nodeObj)
-      })
+    (dom.onclick = e => {
+      if (!mind.currentNode.nodeObj.style) mind.currentNode.nodeObj.style = {}
+      clearSelect('.size', 'size-selected')
+      let size = e.currentTarget
+      mind.currentNode.nodeObj.style.fontSize = size.dataset.size
+      size.className = 'size size-selected'
+      mind.updateNodeStyle(mind.currentNode.nodeObj)
+    })
   )
   bold.onclick = e => {
     if (!mind.currentNode.nodeObj.style) mind.currentNode.nodeObj.style = {}
@@ -180,28 +178,42 @@ export default function(mind) {
     </svg>`
     }
   }
-  mind.bus.addListener('unselectNode', function() {
+  mind.bus.addListener('unselectNode', function () {
     menuContainer.hidden = true
   })
-  mind.bus.addListener('selectNode', function(nodeObj) {
+  mind.bus.addListener('selectNode', function (nodeObj) {
     menuContainer.hidden = false
     clearSelect('.palette', 'nmenu-selected')
     clearSelect('.size', 'size-selected')
     clearSelect('.bold', 'size-selected')
     bgOrFont = 'font'
-    fontBtn.className = 'font selected'
-    fontBtn.nextElementSibling.className = 'background'
+    if (fontBtn) {
+      fontBtn.className = 'font selected'
+      fontBtn.nextElementSibling.className = 'background'
+    }
     if (nodeObj.style) {
-      if (nodeObj.style.fontSize)
-        menuContainer.querySelector(
+      if (nodeObj.style.fontSize) {
+        const fontButton = menuContainer.querySelector(
           '.size[data-size="' + nodeObj.style.fontSize + '"]'
-        ).className = 'size size-selected'
-      if (nodeObj.style.fontWeight)
-        menuContainer.querySelector('.bold').className = 'bold size-selected'
-      if (nodeObj.style.color)
-        menuContainer.querySelector(
+        );
+        if (fontButton) {
+          fontButton.className = 'size size-selected'
+        }
+      }
+      if (nodeObj.style.fontWeight) {
+        const boldButton = menuContainer.querySelector('.bold')
+        if (boldButton) {
+          boldButton.className = 'bold size-selected'
+        }
+      }
+      if (nodeObj.style.color) {
+        const colorButton = menuContainer.querySelector(
           '.palette[data-color="' + nodeObj.style.color + '"]'
-        ).className = 'palette nmenu-selected'
+        )
+        if (colorButton) {
+          colorButton.className = 'palette nmenu-selected'
+        }
+      }
     }
     if (nodeObj.tags) {
       tagInput.value = nodeObj.tags.join(',')
