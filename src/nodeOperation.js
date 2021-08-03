@@ -211,7 +211,7 @@ export let addChild = function (el, node) {
   let { grp, top: newTop } = createGroup(newNodeObj)
 
   if (top.tagName === 'T') {
-    if (top.children[1]) {
+    if (top.children[1] && top.nextSibling) {
       top.nextSibling.appendChild(grp)
     } else {
       let c = $d.createElement('children')
@@ -394,7 +394,7 @@ export let moveNode = function (from, to) {
       // clear direaction class of primary node
       fromTop.parentNode.className = ''
     }
-    if (toTop.children[1]) {
+    if (toTop.children[1] && toTop.nextSibling) {
       // expander exist
       toTop.nextSibling.appendChild(fromTop.parentNode)
     } else {
